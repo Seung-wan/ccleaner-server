@@ -11,29 +11,37 @@ model user {
   id          Int     @default(autoincrement()) @id
   email       String  @unique
   nickname    String
-  imageUrl    String
+  image_url    String
   description String
+  created_at   DateTime @default(now())
+  updated_at   DateTime @default(now())
   posts       post[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
 }
 
 model post {
   id        Int      @default(autoincrement()) @id
-  user      user     @relation(fields:[userId], references: [id])
-  userId    Int
+  user      user     @relation(fields:[user_id], references: [id])
+  user_id    Int
   title     String
   content   String
   link      String
-  techStack tech_stack[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  post_tech_stacks post_tech_stack[]
 }
 
 model tech_stack {
   id        Int      @default(autoincrement()) @id
-  post      post     @relation(fields:[postId], references: [id])
-  postId    Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  name      String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  post_tech_stacks post_tech_stack[]
+}
+
+model post_tech_stack {
+  id      Int      @default(autoincrement()) @id
+  post    post     @relation(fields:[post_id], references: id)
+  post_id  Int
+  tech_stack tech_stack @relation(fields:[tech_stack_id], references:id)
+  tech_stack_id Int
 }
