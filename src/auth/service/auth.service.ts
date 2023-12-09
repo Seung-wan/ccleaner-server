@@ -11,6 +11,8 @@ export class AuthService {
     code: string;
     loginStrategy: LoginStrategy;
   }) {
-    await loginStrategy.login(code);
+    const res = await loginStrategy.login(code);
+
+    return res;
   }
 }

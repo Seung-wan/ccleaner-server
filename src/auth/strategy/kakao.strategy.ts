@@ -1,3 +1,4 @@
+import { JwtService } from '@nestjs/jwt';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
@@ -10,11 +11,14 @@ import { PrismaService } from '@/db/prisma.service';
 export class KakaoStrategy implements LoginStrategy {
   constructor(
     private readonly configService: ConfigService,
-    private readonly prismaService: PrismaService
+    private readonly prismaService: PrismaService,
+    private readonly jwtService: JwtService
   ) {}
 
   async login(code: string) {
     const data = await this.getToken(code);
+
+    console.log('data =', data);
 
     const user = await this.getUser(data.data.access_token);
 
@@ -26,7 +30,7 @@ export class KakaoStrategy implements LoginStrategy {
 
     if (isExist) {
       return {
-        token: '12321321j3lk12j3kl213j',
+        token: await this.jwtService.signAsync(user),
       };
     }
 
@@ -40,7 +44,7 @@ export class KakaoStrategy implements LoginStrategy {
     });
 
     return {
-      token: '123123123',
+      token: await this.jwtService.signAsync(user),
     };
   }
 

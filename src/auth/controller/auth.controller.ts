@@ -11,10 +11,12 @@ export class AuthController {
   ) {}
 
   @Post('/kakao/login')
-  async login(@Body() code: string) {
-    return await this.authService.login({
+  async login(@Body() { code }: { code: string }) {
+    const res = await this.authService.login({
       code,
       loginStrategy: this.kakaoStrategy,
     });
+
+    return res;
   }
 }
